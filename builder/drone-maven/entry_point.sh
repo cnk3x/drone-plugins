@@ -44,20 +44,6 @@ else
     exit 1
 fi
 
-if [[ -f "/var/run/docker.sock" ]]; then
-    echo "/var/run/docker.sock exist."
-else
-    echo "/var/run/docker.sock not exist."
-    exit 1
-fi
-
-if [[ -d "/var/lib/docker" ]]; then
-    echo "/var/lib/docker exist."
-else
-    echo "/var/lib/docker not exist."
-    exit 1
-fi
-
 echo REGISTRY:${PLUGIN_REGISTRY}
 echo REPO:${PLUGIN_REPO}
 echo USERNAME:${PLUGIN_USERNAME}
