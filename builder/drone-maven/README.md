@@ -44,19 +44,17 @@ steps:
   - name: publish
     image: shuxs/drone-maven:3
     settings:
-      username: # 镜像服务器Push用户名
+      username:
         from_secret: username
-      password: # 镜像服务器Push密码
+      password:
         from_secret: password
-      registry: # 目标镜像服务器
+      registry:
         from_secret: registry
-      namespace: # 仓库存储所在组织
+      namespace:
         from_secret: namespace
     volumes:
-      # 缓存maven下载的库
       - name: m2repository
         path: /root/.m2/repository
-      # 连接主机的docker环境
       - name: sock
         path: /var/run/docker.sock
       - name: lib

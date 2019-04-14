@@ -15,22 +15,29 @@ function checkRet() {
 
 VERSION=$(cat VERSION)
 if [[ -z "${VERSION}" ]]; then
-    echo "读取版本号失败"
+    echo "读取版本号失败."
     exit 1
 fi
 echo VERSION:${VERSION}
 
 DIST=$(cat DIST)
 if [[ -z "${DIST}" ]]; then
-    echo "获取目标JAR文件列表失败"
+    echo "获取目标JAR文件列表失败."
     exit 1
 fi
 echo DIST:${DIST}
 
 if [[ -x "/usr/bin/docker" ]]; then
-    echo "docker 命令存在."
+    echo "docker 存在."
 else
-    echo "/usr/bin/docker is not executable."
+    echo "docker 不存在."
+    exit 1
+fi
+
+if [[ -S "/var/run/docker.sock" ]]; then
+    echo "docker 已启动."
+else
+    echo "docker 未运行."
     exit 1
 fi
 
