@@ -1,6 +1,8 @@
 # Drone Maven 编译发布插件
 
-**Build**
+https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
+
+## Build
 
 ```shell
 docker build --tag shuxs/drone-maven:3  \
@@ -9,9 +11,9 @@ docker push shuxs/drone-maven:3
 docker push shuxs/drone-maven:latest
 ```
 
-## 使用方法
+## Demo
 
-**.drone.yml template**
+**.drone.yml**
 
 ```yaml
 kind: pipeline
