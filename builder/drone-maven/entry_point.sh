@@ -9,18 +9,13 @@ function checkRet() {
         if [[ -z "${title}" ]]; then
             echo
         else
-            echo "${title}成功"
+            echo "${title} 成功"
         fi
     else
-        echo "失败,退出代码:${code}"
+        echo "${title} 失败,退出代码:${code}"
         exit ${code}
     fi
 }
-
-section="maven 检查环境"
-echo ${section}
-which mvn && mvn -v
-checkRet $? ${section}
 
 # VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
 VERSION=$(cat VERSION)
@@ -45,24 +40,24 @@ else
 fi
 
 echo REGISTRY:${PLUGIN_REGISTRY}
-echo REPO:${PLUGIN_REPO}
+echo REPO:${PLUGIN_GROUP}
 echo USERNAME:${PLUGIN_USERNAME}
 echo PASSWORD:${PLUGIN_PASSWORD}
 
 section="设置版本号:${VERSION}"
 echo ${section}
 mvn versions:set -DnewVersion=${VERSION} -B -q && mvn -N versions:update-child-modules -B -q && mvn versions:commit -B -q
-checkRet $? ${section}
+checkRet $? "${section}"
 
 section="编译项目"
 echo ${section}
 mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -q
-checkRet $? ${section}
+checkRet $? "${section}"
 
 section="登录镜像仓库"
 echo ${section}
 docker login --username=${PLUGIN_USERNAME} --password=${PLUGIN_PASSWORD} ${PLUGIN_REGISTRY}
-checkRet $? ${section}
+checkRet $? "${section}"
 
 cp /java.Dockerfile Dockerfile
 
@@ -70,7 +65,7 @@ for app in ${DIST}; do
     name=$(basename ${app})
     jar=${app}-${VERSION}.jar
     if [[ -f ${jar} ]]; then
-        tag=${PLUGIN_REGISTRY}/${PLUGIN_REPO}/java-${name}
+        tag=${PLUGIN_REGISTRY}/${PLUGIN_GROUP}/java-${name}
 
         section="编译镜像 ${tag}:${VERSION} + latest"
         echo ${section}
@@ -80,7 +75,7 @@ for app in ${DIST}; do
             --build-arg JAR=${jar} . &&
             docker push ${tag}:latest &&
             docker push ${tag}:${VERSION}
-        checkRet $? ${section}
+        checkRet $? "${section}"
     else
         echo 目标文件不存在 ${jar}
         exit 1
