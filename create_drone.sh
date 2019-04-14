@@ -33,6 +33,7 @@ docker run --name drone \
 docker run --name=drone-agent \
     --detach=true \
     --restart=always \
+    --network=${network} \
     --volume=/var/run/docker.sock:/var/run/docker.sock \
     --env=DRONE_RPC_SERVER=https://${host} \
     --env=DRONE_RPC_SECRET=${rpc_secret} \
