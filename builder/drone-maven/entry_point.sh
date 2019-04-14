@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PATH=$PATH:usr/local/maven/bin
+export PATH=$PATH:/usr/local/maven/bin
 
 function checkRet() {
     code=$1
@@ -28,7 +28,7 @@ fi
 echo DIST:${DIST}
 
 if [[ -x "/usr/bin/docker" ]]; then
-    echo "/usr/bin/docker can executable."
+    echo "docker 命令存在."
 else
     echo "/usr/bin/docker is not executable."
     exit 1

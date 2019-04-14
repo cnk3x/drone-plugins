@@ -11,6 +11,27 @@ docker push shuxs/drone-maven:3 && \
 docker push shuxs/drone-maven:latest
 ```
 
+## Test
+
+```
+export username=******
+export password=********
+export registry=registry.cn-shenzhen.aliyuncs.com
+export namespace=amzcs
+
+docker run --rm \
+  -e PLUGIN_USERNAME=${username} \
+  -e PLUGIN_PASSWORD=${password} \
+  -e PLUGIN_REGISTRY=${registry} \
+  -e PLUGIN_NAMESPACE=${namespace} \
+  -v $(pwd):/drone/src \
+  -w /drone/src \
+  -v /data/docker/drone/.m2/repository:/root/.m2/repository \
+  -v /usr/bin/docker:/usr/bin/docker \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  shuxs/drone-maven:3
+```
+
 ## Demo
 
 **.drone.yml**
