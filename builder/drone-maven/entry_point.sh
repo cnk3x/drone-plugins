@@ -34,11 +34,6 @@ else
     exit 1
 fi
 
-echo REGISTRY:${PLUGIN_REGISTRY}
-echo REPO:${PLUGIN_GROUP}
-echo USERNAME:${PLUGIN_USERNAME}
-echo PASSWORD:${PLUGIN_PASSWORD}
-
 section="设置版本号:${VERSION}"
 echo ${section}
 mvn versions:set -DnewVersion=${VERSION} -B -q && mvn -N versions:update-child-modules -B -q && mvn versions:commit -B -q
@@ -60,7 +55,7 @@ for app in ${DIST}; do
     name=$(basename ${app})
     jar=${app}-${VERSION}.jar
     if [[ -f ${jar} ]]; then
-        tag=${PLUGIN_REGISTRY}/${PLUGIN_GROUP}/java-${name}
+        tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/java-${name}
 
         section="编译镜像 ${tag}:${VERSION} + latest"
         echo ${section}

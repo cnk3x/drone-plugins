@@ -29,8 +29,8 @@ steps:
         from_secret: password
       registry: # 目标镜像服务器
         from_secret: registry
-      group: # 仓库存储所在组织
-        from_secret: group
+      namespace: # 仓库存储所在组织
+        from_secret: namespace
     volumes:
       # 缓存maven下载的库
       - name: m2repository
