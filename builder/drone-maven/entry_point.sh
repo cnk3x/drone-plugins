@@ -1,6 +1,6 @@
 #!/bin/sh
 
-alias mvn=/usr/local/maven/bin/mvn
+export PATH=$PATH:usr/local/maven/bin
 
 function checkRet() {
     code=$1
