@@ -6,18 +6,13 @@ function checkRet() {
     code=$1
     title=$2
     if [[ ${code} == 0 ]]; then
-        if [[ -z "${title}" ]]; then
-            echo
-        else
-            echo "${title} 成功"
-        fi
+        echo "${title} 成功"
     else
         echo "${title} 失败,退出代码:${code}"
         exit ${code}
     fi
 }
 
-# VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
 VERSION=$(cat VERSION)
 if [[ -z "${VERSION}" ]]; then
     echo "读取版本号失败"
@@ -72,9 +67,12 @@ for app in ${DIST}; do
         docker build \
             --tag ${tag}:${VERSION} \
             --tag ${tag}:latest \
-            --build-arg JAR=${jar} . &&
-            docker push ${tag}:latest &&
-            docker push ${tag}:${VERSION}
+            --build-arg JAR=${jar} .
+        checkRet $? "${section}"
+
+        section="发布镜像 ${tag}:${VERSION}"
+        echo ${section}
+        docker push ${tag}:latest && docker push ${tag}:${VERSION}
         checkRet $? "${section}"
     else
         echo 目标文件不存在 ${jar}
