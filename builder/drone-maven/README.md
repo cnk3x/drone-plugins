@@ -57,8 +57,6 @@ steps:
         path: /root/.m2/repository
       - name: sock
         path: /var/run/docker.sock
-      - name: lib
-        path: /var/lib/docker
       - name: docker
         path: /usr/bin/docker
 
@@ -66,9 +64,6 @@ volumes:
   - name: sock
     host:
       path: /var/run/docker.sock
-  - name: lib
-    host:
-      path: /var/lib/docker
   - name: docker
     host:
       path: /usr/bin/docker
