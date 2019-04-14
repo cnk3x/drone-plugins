@@ -74,6 +74,7 @@ for app in ${DIST}; do
         echo ${section}
         docker push ${tag}:latest && docker push ${tag}:${VERSION}
         checkRet $? "${section}"
+        docker image rm ${tag}:latest ${tag}:${VERSION}
     else
         echo 目标文件不存在 ${jar}
         exit 1

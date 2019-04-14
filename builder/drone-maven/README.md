@@ -6,8 +6,8 @@ https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
 
 ```shell
 docker build --tag shuxs/drone-maven:3  \
-  --tag shuxs/drone-maven:latest .
-docker push shuxs/drone-maven:3
+  --tag shuxs/drone-maven:latest . && \
+docker push shuxs/drone-maven:3 && \
 docker push shuxs/drone-maven:latest
 ```
 
