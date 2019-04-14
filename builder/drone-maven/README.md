@@ -20,7 +20,7 @@ kind: pipeline
 name: default
 
 steps:
-  - name: build_publish
+  - name: publish
     image: shuxs/drone-maven:3
     settings:
       username: # 镜像服务器Push用户名
