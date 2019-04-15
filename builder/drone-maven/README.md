@@ -39,7 +39,7 @@ name: default
 
 steps:
   - name: publish
-    image: shuxs/drone-maven:3
+    image: shuxs/drone-maven
     settings:
       username:
         from_secret: username
