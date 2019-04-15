@@ -8,26 +8,6 @@ https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
 docker build --tag shuxs/drone-maven:latest . && docker push shuxs/drone-maven:latest
 ```
 
-## Test
-
-```
-export username=******
-export password=********
-export registry=registry.cn-shenzhen.aliyuncs.com
-export namespace=amzcs
-
-docker run --rm \
-  -e PLUGIN_USERNAME=${username} \
-  -e PLUGIN_PASSWORD=${password} \
-  -e PLUGIN_REGISTRY=${registry} \
-  -e PLUGIN_NAMESPACE=${namespace} \
-  -v $(pwd):/drone/src \
-  -w /drone/src \
-  -v /data/docker/drone/.m2/repository:/root/.m2/repository \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  shuxs/drone-maven:3
-```
-
 ## Demo
 
 **.drone.yml**
@@ -37,7 +17,7 @@ kind: pipeline
 name: default
 
 steps:
-  - name: build
+  - name: publish
     image: shuxs/drone-maven
     settings:
       username:
@@ -51,13 +31,18 @@ steps:
     volumes:
       - name: m2repository
         path: /root/.m2/repository
-      - name: docker
+      - name: sock
         path: /var/run/docker.sock
+      - name: docker
+        path: /usr/bin/docker
 
 volumes:
-  - name: docker
+  - name: sock
     host:
       path: /var/run/docker.sock
+  - name: docker
+    host:
+      path: /usr/bin/docker
   - name: m2repository
     host:
       path: /data/docker/drone/.m2/repository

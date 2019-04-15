@@ -1,4 +1,4 @@
 FROM scratch
-ARG APP
-COPY ${APP} /app
+ARG dist
+COPY ${dist} /app
 ENTRYPOINT [ "/app" ]

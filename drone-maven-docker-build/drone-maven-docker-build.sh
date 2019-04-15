@@ -34,15 +34,7 @@ else
     echo ${DIST} | xargs -I {} dirname {}
 fi
 
-echo "检查 docker 命令"
-if [[ -x "/usr/local/bin/docker" ]]; then
-    echo "docker 存在."
-else
-    echo "docker 不存在."
-    exit 1
-fi
-
-echo "检查 docker 是否运行"
+echo "检查 docker"
 if [[ -S "/var/run/docker.sock" ]]; then
     echo "docker 已启动."
 else
@@ -50,7 +42,7 @@ else
     exit 1
 fi
 
-cp /javaapp.Dockerfile javaapp.Dockerfile
+cp /java.Dockerfile java.Dockerfile
 
 section="设置版本号:${VERSION}"
 echo ${section}
@@ -69,13 +61,13 @@ checkRet $? "${section}"
 
 for app in ${DIST}; do
     name=$(basename ${app})
-    jar=$(dirname ${app})-${VERSION}.jar
-    if [[ -f ${jar} ]]; then
+    dist=$(dirname ${app})-${VERSION}.jar
+    if [[ -f ${dist} ]]; then
         tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/java-${name}
 
-        section="编译镜像 ${tag}:${VERSION} + latest"
+        section="编译镜像 ${tag}:${VERSION}"
         echo ${section}
-        docker build --tag ${tag}:${VERSION} --build-arg JAR=${jar} -f javaapp.Dockerfile .
+        docker build --tag ${tag}:${VERSION} --build-arg dist=${dist} -f java.Dockerfile .
         checkRet $? "${section}"
 
         section="发布镜像 ${tag}:${VERSION}"
@@ -83,7 +75,7 @@ for app in ${DIST}; do
         docker push ${tag}:${VERSION}
         checkRet $? "${section}"
     else
-        echo 目标文件不存在 ${jar}
+        echo 目标文件不存在 ${dist}
         exit 1
     fi
 done

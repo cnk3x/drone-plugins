@@ -1,6 +1,11 @@
 # docker build -t shuxs/docker-cli:latest . && docker push shuxs/docker-cli:latest
 FROM alpine:3.9
 
+ENV LANG C.UTF-8
+
+# RUN echo "http://mirrors.cloud.aliyuncs.com/alpine/v3.9/main" > /etc/apk/repositories; \
+#     echo "http://mirrors.cloud.aliyuncs.com/alpine/v3.9/community" >> /etc/apk/repositories; 
+
 RUN echo "http://mirrors.aliyun.com/alpine/v3.9/main" > /etc/apk/repositories; \
     echo "http://mirrors.aliyun.com/alpine/v3.9/community" >> /etc/apk/repositories; \
     apk add --no-cache --allow-untrusted ca-certificates curl && \

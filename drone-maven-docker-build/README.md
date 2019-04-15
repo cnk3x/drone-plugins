@@ -1,11 +1,9 @@
 # Drone Maven 编译插件
 
-https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
-
 ## Build
 
 ```shell
-docker build --tag shuxs/drone-maven:latest . && docker push shuxs/drone-maven:latest
+docker build --tag shuxs/drone-maven-docker-build:latest . && docker push shuxs/drone-maven-docker-build:latest
 ```
 
 ## Test
@@ -24,9 +22,8 @@ docker run --rm \
   -v $(pwd):/drone/src \
   -w /drone/src \
   -v /data/docker/drone/.m2/repository:/root/.m2/repository \
-  -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  shuxs/drone-maven:3
+  shuxs/drone-maven-docker-build:latest
 ```
 
 ## Demo
@@ -38,8 +35,8 @@ kind: pipeline
 name: default
 
 steps:
-  - name: publish
-    image: shuxs/drone-maven
+  - name: build
+    image: shuxs/drone-maven-docker-build
     settings:
       username:
         from_secret: username
@@ -52,18 +49,13 @@ steps:
     volumes:
       - name: m2repository
         path: /root/.m2/repository
-      - name: sock
-        path: /var/run/docker.sock
       - name: docker
-        path: /usr/bin/docker
+        path: /var/run/docker.sock
 
 volumes:
-  - name: sock
-    host:
-      path: /var/run/docker.sock
   - name: docker
     host:
-      path: /usr/bin/docker
+      path: /var/run/docker.sock
   - name: m2repository
     host:
       path: /data/docker/drone/.m2/repository
