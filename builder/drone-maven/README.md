@@ -1,14 +1,11 @@
-# Drone Maven 编译发布插件
+# Drone Maven 编译插件
 
 https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
 
 ## Build
 
 ```shell
-docker build --tag shuxs/drone-maven:3  \
-  --tag shuxs/drone-maven:latest . && \
-docker push shuxs/drone-maven:3 && \
-docker push shuxs/drone-maven:latest
+docker build --tag shuxs/drone-maven:latest . && docker push shuxs/drone-maven:latest
 ```
 
 ## Test
