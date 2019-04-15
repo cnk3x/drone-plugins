@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PATH=$PATH:/usr/local/maven/bin
+source /etc/profile
 
 function checkRet() {
     code=$1
@@ -76,7 +76,8 @@ for app in ${DIST}; do
         echo ${section}
         docker push ${tag}:latest && docker push ${tag}:${VERSION}
         checkRet $? "${section}"
-        docker image rm ${tag}:latest ${tag}:${VERSION}
+        # docker image rm ${tag}:latest ${tag}:${VERSION}
+        # appleboy/drone-ssh
     else
         echo 目标文件不存在 ${jar}
         exit 1
