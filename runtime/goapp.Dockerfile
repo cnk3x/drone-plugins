@@ -1,3 +1,4 @@
 FROM scratch
-VOLUME ["/app.config"]
-CMD [ "/app", "-c", "app.config" ]
+ARG APP
+COPY ${APP} /app
+ENTRYPOINT [ "/app" ]

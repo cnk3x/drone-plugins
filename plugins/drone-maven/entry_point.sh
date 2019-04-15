@@ -1,7 +1,5 @@
 #!/bin/sh
 
-source /etc/profile
-
 function checkRet() {
     code=$1
     title=$2
@@ -28,7 +26,7 @@ else
 fi
 
 echo "检查JAR文件列表"
-DIST=$(cat DIST)
+DIST=$(cat .drone.targets)
 if [[ -z "${DIST}" ]]; then
     DIST="target/${PLUGIN_NAME}/${PLUGIN_NAME}"
     echo "获取目标JAR文件列表失败, 设置为默认：$(dirname ${DIST})"
@@ -37,7 +35,7 @@ else
 fi
 
 echo "检查 docker 命令"
-if [[ -x "/usr/bin/docker" ]]; then
+if [[ -x "/usr/local/bin/docker" ]]; then
     echo "docker 存在."
 else
     echo "docker 不存在."
@@ -52,22 +50,22 @@ else
     exit 1
 fi
 
+cp /javaapp.Dockerfile javaapp.Dockerfile
+
 section="设置版本号:${VERSION}"
 echo ${section}
-mvn versions:set -DnewVersion=${VERSION} -B && mvn -N versions:update-child-modules -B && mvn versions:commit -B
+mvn versions:set -DnewVersion=${VERSION} -B -q && mvn -N versions:update-child-modules -B -q && mvn versions:commit -B -q
 checkRet $? "${section}"
 
 section="编译项目"
 echo ${section}
-mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B
+mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -q
 checkRet $? "${section}"
 
 section="登录镜像仓库"
 echo ${section}
 docker login --username=${PLUGIN_USERNAME} --password=${PLUGIN_PASSWORD} ${PLUGIN_REGISTRY}
 checkRet $? "${section}"
-
-cp /java.Dockerfile Dockerfile
 
 for app in ${DIST}; do
     name=$(basename ${app})
@@ -77,17 +75,12 @@ for app in ${DIST}; do
 
         section="编译镜像 ${tag}:${VERSION} + latest"
         echo ${section}
-        docker build --tag ${tag}:${VERSION} --build-arg JAR=${jar} .
+        docker build --tag ${tag}:${VERSION} --build-arg JAR=${jar} -f javaapp.Dockerfile .
         checkRet $? "${section}"
 
         section="发布镜像 ${tag}:${VERSION}"
         echo ${section}
         docker push ${tag}:${VERSION}
-        checkRet $? "${section}"
-
-        section="清理"
-        echo ${section}
-        docker image rm ${tag}:latest ${tag}:${VERSION}
         checkRet $? "${section}"
     else
         echo 目标文件不存在 ${jar}
