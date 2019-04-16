@@ -13,7 +13,7 @@ docker build --tag shuxs/drone-ssh:latest . && docker push shuxs/drone-ssh:lates
 ```yaml
 steps:
   - name: publish
-    image: shuxs/drone-ssh-publish-docker-swarm:latest
+    image: shuxs/drone-ssh:latest
     settings:
       name: promotion-api #需要改
       publish: 58080:8080 #需要改
