@@ -60,20 +60,22 @@ docker login --username=${PLUGIN_USERNAME} --password=${PLUGIN_PASSWORD} ${PLUGI
 checkRet $? "${section}"
 
 for app in ${DIST}; do
-    name=$(basename ${app})
+    repo_name=$(basename ${app})
     dist=$(dirname ${app})-${VERSION}.jar
     if [[ -f ${dist} ]]; then
-        tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/java-${name}
+        tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/${repo_name}
 
         section="编译镜像 ${tag}:${VERSION}"
         echo ${section}
-        docker build --tag ${tag}:${VERSION} --build-arg dist=${dist} -f java.Dockerfile .
+        docker build --tag ${tag}:${VERSION} --tag ${tag}:latest --build-arg dist=${dist} -f java.Dockerfile .
         checkRet $? "${section}"
 
         section="发布镜像 ${tag}:${VERSION}"
         echo ${section}
-        docker push ${tag}:${VERSION}
+        docker push ${tag}:${VERSION} && docker push ${tag}:latest
         checkRet $? "${section}"
+
+        docker rmi ${tag}:${VERSION} && docker rmi ${tag}:latest
     else
         echo 目标文件不存在 ${dist}
         exit 1
