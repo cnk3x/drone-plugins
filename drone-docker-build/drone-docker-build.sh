@@ -11,13 +11,22 @@ function checkRet() {
     fi
 }
 
-echo "检查JAR文件列表"
+echo "检查目标列表: .drone.targets"
 DIST=$(cat .drone.targets)
 if [[ -z "${DIST}" ]]; then
     echo "获取目标文件列表失败，请检查 .drone.targets 文件"
     exit 1
 else
     echo ${DIST} | xargs -I {} dirname {}
+fi
+
+echo "检查找版本号"
+VERSION=$(cat VERSION)
+if [[ -z "${VERSION}" ]]; then
+    echo "检查找版本号失败."
+    exit 1
+else
+    echo VERSION:${VERSION}
 fi
 
 echo "检查 docker"
@@ -40,13 +49,15 @@ function BuildAndPush() {
 
     section="编译镜像 ${tag}:latest"
     echo ${section}
-    docker build --tag ${tag}:latest --build-arg dist=${dist} -f ${ext}.Dockerfile .
+    docker build --tag ${tag}:latest --tag ${tag}:${VERSION} --build-arg dist=${dist} -f ${ext}.Dockerfile .
     checkRet $? "${section}"
 
-    section="发布镜像 ${tag}:latest"
+    section="发布镜像 ${tag}"
     echo ${section}
-    docker push ${tag}:latest
+    docker push ${tag}:${VERSION} && docker push ${tag}:latest
     checkRet $? "${section}"
+
+    docker rmi ${tag}:${VERSION} ${tag}:latest
 }
 
 function BuildJavaImage() {
@@ -54,12 +65,14 @@ function BuildJavaImage() {
     base_name=$2
     dist=${base_name}-${VERSION}.jar
 
+    echo "编译 java 镜像 ${repo_name}"
+
     if [[ -f "${dist}" ]]; then
         cp /java.Dockerfile java.Dockerfile
         tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/${repo_name}
         BuildAndPush ${tag} ${dist} java
     else
-        echo "找不到目标文件"
+        echo "目标文件不存在 ${dist}"
         exit 1
     fi
 }
@@ -69,10 +82,15 @@ function BuildNativeImage() {
     base_name=$2
     dist=${base_name}-${VERSION}
 
+    echo "编译 native 镜像 ${repo_name}"
+
     if [[ -f "${dist}" ]]; then
         cp /native.Dockerfile native.Dockerfile
         tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/${repo_name}
         BuildAndPush ${tag} ${dist} native
+    else
+        echo "目标文件不存在 ${dist}"
+        exit 1
     fi
 }
 
@@ -82,6 +100,8 @@ function BuildDotnetImage() {
     dir=$(dirname $2)
     dist=${dir}-${VERSION}
 
+    echo "编译 dotnet 镜像 ${repo_name}"
+
     if [[ -d "${dist}" ]]; then
         cp /dotnet.Dockerfile dotnet.Dockerfile
         tag=${PLUGIN_REGISTRY}/${PLUGIN_NAMESPACE}/${repo_name}
@@ -89,15 +109,17 @@ function BuildDotnetImage() {
 
         section="编译镜像 ${tag}:latest"
         echo ${section}
-        docker build --tag ${tag}:latest --build-arg dist=${dist} --build-arg dll=${dll} -f dotnet.Dockerfile .
+        docker build --tag ${tag}:latest --tag ${tag}:${VERSION} --build-arg dist=${dist} --build-arg dll=${dll} -f dotnet.Dockerfile .
         checkRet $? "${section}"
 
         section="发布镜像 ${tag}:latest"
         echo ${section}
-        docker push ${tag}:latest
+        docker push ${tag}:${VERSION} && docker push ${tag}:latest
         checkRet $? "${section}"
+
+        docker rmi ${tag}:${VERSION} ${tag}:latest
     else
-        echo "找不到目标文件"
+        echo "目标文件不存在 ${dist}"
         exit 1
     fi
 }
