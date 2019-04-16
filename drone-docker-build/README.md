@@ -1,11 +1,9 @@
-# Drone Maven 编译插件
-
-https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
+# drone docker 插件
 
 ## Build
 
 ```shell
-docker build --tag shuxs/drone-maven:latest . && docker push shuxs/drone-maven:latest
+docker build -t shuxs/drone-docker-build:latest . && docker push shuxs/drone-docker-build:latest
 ```
 
 ## Demo
@@ -17,8 +15,8 @@ kind: pipeline
 name: default
 
 steps:
-  - name: publish
-    image: shuxs/drone-maven
+  - name: docker-build
+    image: shuxs/drone-docker-build
     settings:
       username:
         from_secret: username

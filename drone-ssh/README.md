@@ -1,7 +1,5 @@
 # Drone SSH 发布插件
 
-https://github.com/shuxs/drone-env/tree/master/builder/drone-maven
-
 ## Build
 
 ```shell

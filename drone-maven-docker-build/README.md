@@ -1,4 +1,4 @@
-# Drone Maven 编译插件
+# drone maven 编译 和 docker build 插件
 
 ## Build
 
