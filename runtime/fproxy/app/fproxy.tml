@@ -1,0 +1,7 @@
+[app]
+listen  =":3000"
+
+[[proxy]]
+name    ="front"
+prefix  ="/"
+target  ="www"

@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "${OSS_BUCKET}:${OSS_KEY}:${OSS_SECRET}" >/etc/passwd-ossfs
+chmod 640 /etc/passwd-ossfs
+mkdir -p ${OSS_DIST}
+/usr/bin/ossfs ${OSS_BUCKET} ${OSS_DIST} -ourl=http://oss-${OSS_REGION}.aliyuncs.com %*
