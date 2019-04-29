@@ -1,7 +1,7 @@
 {
   "name": "front-web",
-  "image": "shuxs/jaddy:latest",
+  "image": "shuxs/caddy:latest",
   "src": "dist",
   "target": "/www",
-  "env": ["API_ADDR=http://amzcs-seller-api"]
+  "env": ["API_ADDR=http://amzcs-seller-api:8080"]
 }
