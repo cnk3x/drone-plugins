@@ -10,4 +10,4 @@ RUN apk add --no-cache --allow-untrusted curl; \
     rm -rf ${latest} /docker /var/lib/apk /etc/apk/cache; \
     docker --version;
 
-CMD ["docker"]
+CMD ["docker", "info"]

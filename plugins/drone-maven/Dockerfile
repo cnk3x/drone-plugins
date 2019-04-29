@@ -1,11 +1,13 @@
 # docker build --tag shuxs/drone-maven-docker-build:latest . && docker push shuxs/drone-maven-docker-build:latest
-FROM shuxs/docker-cli:latest
+FROM shuxs/alpine:latest
 
 RUN apk add --no-cache openjdk8 maven; \
-    rm -rf /docker /var/lib/apk /etc/apk/cache; \
+    rm -rf /var/lib/apk /etc/apk/cache; \
     java -version; \
     mvn -v;
 
-COPY ./drone-maven-docker-build.sh java.Dockerfile /
+COPY ./entry_point.sh /
 
-CMD [ "/drone-maven-docker-build.sh" ]
+RUN chmod +x /entry_point.sh
+
+CMD [ "/entry_point.sh" ]

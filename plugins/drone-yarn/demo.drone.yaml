@@ -1,0 +1,39 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: build
+    image: shuxs/drone-yarn
+    volumes:
+      - name: node_modules
+        path: /drone/src/node_modules
+    commands:
+      - node -v && yarn -v
+      - yarn install && yarn build
+  - name: docker-build
+    image: shuxs/drone-docker
+    settings:
+      username:
+        from_secret: username
+      password:
+        from_secret: password
+      registry:
+        from_secret: registry
+      namespace:
+        from_secret: namespace
+    volumes:
+      - name: sock
+        path: /var/run/docker.sock
+
+volumes:
+  - name: node_modules
+    host:
+      path: /data/docker/drone/.node/node_modules
+  - name: sock
+    host:
+      path: /var/run/docker.sock
+
+trigger:
+  event:
+    - tag
+    - tags

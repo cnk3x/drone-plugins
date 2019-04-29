@@ -1,0 +1,21 @@
+[
+  {
+    "name": "amzcs-seller-api",
+    "image": "shuxs/jre:latest",
+    "src": "./amzcs-seller-api-{VERSION}.jar",
+    "target": "/app/amzcs-seller-api-{VERSION}.jar",
+    "cmd": [
+      "java",
+      "-jar",
+      "/app/amzcs-seller-api-{VERSION}.jar",
+      "-path=/app/app.config"
+    ]
+  },
+  {
+    "name": "amzcs-seller-ui",
+    "image": "shuxs/jaddy:latest",
+    "src": "dist",
+    "target": "/www",
+    "env": ["API_ADDR=http://amzcs-seller-api"]
+  }
+]

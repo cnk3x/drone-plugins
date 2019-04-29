@@ -14,4 +14,6 @@ COPY ossfs-fs /usr/bin/fs
 RUN chmod +x /usr/bin/ossfs && chmod +x /usr/bin/fs
 ENV LANG C.UTF-8
 
-CMD ["sh"]
+ENTRYPOINT [ "fs" ]
+
+CMD [ "dotnet", "--info" ]

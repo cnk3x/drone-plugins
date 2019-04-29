@@ -6,4 +6,4 @@ COPY ossfs-346a355 /usr/bin/ossfs
 COPY ossfs-fs /usr/bin/fs
 RUN chmod +x /usr/bin/ossfs && chmod +x /usr/bin/fs
 
-CMD ["sh"]
+ENTRYPOINT [ "fs" ]

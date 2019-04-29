@@ -1,0 +1,7 @@
+{
+  "name": "front-web",
+  "image": "shuxs/jaddy:latest",
+  "src": "dist",
+  "target": "/www",
+  "env": ["API_ADDR=http://amzcs-seller-api"]
+}
